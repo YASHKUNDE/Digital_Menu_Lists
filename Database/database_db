@@ -1,0 +1,44 @@
+menu.gid  →  food_group.gid
+menu.qid  →  qtymast.qid
+orders.menu_id  →  menu.mid
+
+
+CREATE TABLE food_group (
+    gid SERIAL PRIMARY KEY,
+    group_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE qtymast (
+    qid SERIAL PRIMARY KEY,
+    qty_type VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE menu (
+    mid SERIAL PRIMARY KEY,
+    menu_name VARCHAR(200) NOT NULL,
+    menu_price DECIMAL(10,2) NOT NULL,
+    gid INT REFERENCES food_group(gid),
+    qid INT REFERENCES qtymast(qid)
+);
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    table_number INT NOT NULL,
+    menu_id INT REFERENCES menu(mid),
+    quantity INT DEFAULT 1,
+    ordered_menu_name VARCHAR(200) NOT NULL,
+    ordered_menu_price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'billed', 'paid')),
+    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+INSERT INTO food_group (group_name) VALUES ('Starters'), ('Main Course'), ('Desserts');
+
+INSERT INTO qtymast (qty_type) VALUES ('Half Plate'), ('Full Plate'), ('Quarter');
+
+INSERT INTO menu (menu_name, menu_price, gid, qid) VALUES ('Chicken Biryani', 250.00, 2, 2);
+
+INSERT INTO orders (table_number, menu_id, quantity, ordered_menu_name, ordered_menu_price, status) 
+VALUES (5, 1, 2, 'Chicken Biryani', 250.00, 'pending');

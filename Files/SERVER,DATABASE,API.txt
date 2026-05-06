@@ -1,0 +1,280 @@
+--How to Create Servers or Routing and Connection with Database 
+
+--Createing Application (Using NODE JS And EXPRESS JS)
+--Server (Using NODE JS)
+--Routing (Using NODE JS)
+--Routing Connect with html  (Using NODE JS)
+--Connection Database db.js (Using EXPRESS JS)
+--Create Server and Using database to create API
+--How to Created API Call in JavaScript
+--Using axios CDN Link to support API
+--Call the API in html tags and set id
+
+--Application (INSTALL PACKAGES)
+--Open New Folder In Terminal (NODE JS)
+->npm install
+->npm init
+->npm install express
+->npm install express-validator
+->npm install bcrypt
+(Create File 
+->index.html
+Modules 
+->requires)
+_________________________________________________________
+
+-->Connection Database db.js (Using EXPRESS JS)
+
+const {Pool} = require('pg');
+
+const pool = new Pool({
+    user:'postgres',
+    host:'localhost',
+    database:'food_menu',
+    password:'123456',
+    port:5432 // port should be a number, not a string
+});
+
+module.exports = pool;
+________________________________________________________
+
+-->Server (Using NODE JS)
+
+const http = require('http');
+
+http.createServer(function(req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('hello world!');
+}).listen(3000, '127.0.0.1', () => {
+    console.log('Listening on 127.0.0.1:3000');
+});
+_______________________________________________________
+
+-->Routing (Using NODE JS)
+
+const http = require('http');
+
+http.createServer(function(req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    const url = req.url;
+    if(url ==='/about'){
+        res.write('Welcome to about us page');
+        res.end();
+    }
+    else if(url ==='/contact'){
+        res.write('Welcome to contact page');
+        res.end();
+    }
+    else if(url ==='/gallary'){
+        res.write('Welcome to gallary page');
+        res.end();
+    }else{
+        res.write('Welcome to Hello World! page');
+        res.end();
+    }
+}).listen(3000, '127.0.0.1', () => {
+    console.log('Listening on 127.0.0.1:3000');
+});
+_____________________________________________________
+
+-->Routing Connect with html  (Using NODE JS)
+
+const http = require('http');
+const fs = require('fs');
+http.createServer(function(req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    const url = req.url;
+    if(url ==='/about'){
+        fs.readFile('test.html',function(err, data){
+            res.write(data);
+            return res.send();
+        });
+    }
+    else if(url ==='/contact'){
+        res.write('Welcome to contact page');
+        res.end();
+    }
+    else if(url ==='/gallary'){
+        res.write('Welcome to gallary page');
+        res.end();
+    }else{
+        res.write('Welcome to Hello World! page');
+        res.end();
+    }
+}).listen(3000, '127.0.0.1', () => {
+    console.log('Listening on 127.0.0.1:3000');
+});
+
+================================================================================================
+
+-->Connection Database db.js (Using EXPRESS JS)
+
+const {Pool} = require('pg');
+
+const pool = new Pool({
+    user:'postgres',
+    host:'localhost',
+    database:'food_menu',
+    password:'123456',
+    port:5432 // port should be a number, not a string
+});
+
+module.exports = pool;
+
+============================...View.../...Update.../...Delete.../...Add...============================
+
+-->Create Server and Using database to create API (Using Nsde JS, Express JS)
+
+const express = require('express');
+const pool = require ('./db');  //Assuming the connection is in db.js
+const app = express();
+const bodyParser = require('body-parser');
+const PORT = 3000;
+
+app.use(bodyParser.json());
+app.get('/', (req, res) => {
+    res.send('<h1>Express JS API</h1>');              // Default Value to Screen
+  })
+
+============================.....View_API.....============================
+
+app.get('/menu', async (req, res) => {
+  try{
+    const result = await pool.query('SELECT * FROM menu');           //Change Path
+    res.json(result.rows);
+  }catch{
+    console.log(error.messege);
+    res.status(500).send('Server Error');
+  }
+});
+
+============================.....View_API_By_ID.....============================
+
+app.get('/menuid',
+  [body('mid').notEmpty().withMessage('id is required')], 
+  async (req, res) => {
+  try{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json({error: error.array()});
+    }else{
+      const { mid } = req.body;
+      const result = await pool.query('select * from menu where mid=$1',[mid]);
+      if(result.rows.length > 0){
+        res.json({status:"200",message:"success",data: result.rows})
+      }
+      else{
+        res.json({status:"400",message:"no data found"})
+      }
+    }
+    }catch(err){
+    console.log(error.messege);
+    res.status(500).send('Server Error');
+    }
+});
+
+============================.....Delete_API_Data.....============================
+
+app.delete('/delmenu', 
+  [body('mid').notEmpty().withMessage('id is require')],
+  async (req, res) => {
+  try{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({error: error.array()});
+      }else{
+        const { mid } = req.body;
+        const result = await pool.query('select * from menu where mid=$1',[mid]);
+        if(result.rows.length>0){
+          await pool.query('delete from menu where mid=$1',[mid]);
+          res.send({status:"200", message: "Delete Successfully" });
+        }else{
+          res.send({status:"400", message: "Delete Failed" });
+        }
+      }
+    }catch{
+      console.log(error.messege);
+      res.status(500).send('Server Error');
+    }
+});
+
+============================.....Update_API_Data.....============================
+
+app.put('/updmenu',[
+  body('menu_name').notEmpty().withMessage('menu_name is require'),
+  body('menu_price').notEmpty().withMessage('menu_price is require'),
+  body('gid').notEmpty().withMessage('gid is require'),
+  body('qid').notEmpty().withMessage('qid is require'),
+  body('mid').notEmpty().withMessage('mid is require')
+] ,async (req, res) => {
+  try{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({error: error.array()});
+    }else{
+      const { menu_name,menu_price, gid, qid, mid } = req.body;
+      const result = await pool.query('select * from menu where mid=$1',[mid]);
+      if(result.rows.length > 0){
+        await pool.query('update menu set menu_name=$1,menu_price=$2,gid=$3,qid=$4 where mid=$5',
+          [menu_name,menu_price, gid, qid, mid]);
+          res.send({status:"200", message: "Update Successfully" });
+        }else{
+          res.send({status:"400", message: "Update Failed" });
+        }
+      }
+    }catch{
+    console.log(error.messege);
+    res.status(500).send('Server Error');
+  }
+});
+
+============================.....Add_New_API_Data.....============================
+
+app.post('/addmenu', async (req, res) => {
+  try{
+    const { menu_name,menu_price, gid, qid } = req.body;
+    const result = await pool.query('insert into menu(menu_name,menu_price,gid,qid)values($1,$2,$3,$4)',
+      [menu_name,menu_price, gid, qid]);
+    //res.json(result.rows);
+    res.send({ status:"200", message: "Save Successfully" });
+  }catch{
+    console.log(error.messege);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+================================================================================================
+
+-->How to Created API Call in JavaScript
+-->Using axios CDN Link to support API
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+-->To Create a Function and Use axios code (Using JavaScript)
+<script> 
+        function api(){
+            axios.get("https://api.rootnet.in/covid19-in/stats/latest")             // axios.get("API Link")
+           .then(response => {
+                console.log(response.data);
+                document.getElementById("v1").innerHTML = response.data.data.summary.total;       //set html id Print API values on Screen
+            })
+        }
+</script>
+
+--> Call the API in html tags and set id
+
+<!DOCTYPE html>
+<html>
+<head>
+               //axios CDN link
+</head>
+<body onload="api()">
+    <center>
+    <h1 id="v1"></h1>
+</center>
+</body>
+</html>

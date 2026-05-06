@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Artifika&display=swap');
+
+.AddFg {
+  width: max-content;
+  height: max-content;
+  padding: 30px;
+  background-color: rgba(17, 25, 40, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  font-family: 'Artifika', serif;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.AddFg form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.AddFg input {
+  width: 300px;
+  height: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  box-shadow: 0 8px 12px -6px rgba(207, 240, 255, 0.3);
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.AddFg input::placeholder {
+  color: #ffffffcc;
+  font-family: "Artifika", serif;
+}
+
+.AddFg input:focus {
+  border-color: #00b0ff;
+  box-shadow: 0 0 0 2px rgba(0, 176, 255, 0.3);
+}
+
+.AddFg button {
+  width: 130px;
+  height: 50px;
+  background: linear-gradient(135deg, #0085FF 0%, #152CFF 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: "Artifika", serif;
+  font-weight: 500;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.AddFg button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 14px -3px rgba(0, 132, 255, 0.4);
+}

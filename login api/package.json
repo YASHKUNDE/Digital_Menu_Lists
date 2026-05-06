@@ -1,0 +1,19 @@
+{
+  "name": "digimenu",
+  "version": "1.0.0",
+  "description": "Digi Menu Login API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SUYASH KUNDE",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.2.0",
+    "pg": "^8.12.0"
+  }
+}
