@@ -2,6 +2,13 @@ menu.gid  →  food_group.gid
 menu.qid  →  qtymast.qid
 orders.menu_id  →  menu.mid
 
+CREATE TABLE login (
+  id SERIAL PRIMARY KEY,
+  users VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  mobile VARCHAR(15),
+  pass VARCHAR(100)
+);
 
 CREATE TABLE food_group (
     gid SERIAL PRIMARY KEY,
@@ -33,6 +40,10 @@ CREATE TABLE orders (
 );
 
 
+INSERT INTO login (users, email, mobile, pass)
+VALUES 
+('Yash', 'yash@example.com', '9876543210', '12345'),
+('Rahul', 'rahul@example.com', '9123456780', 'password123');
 
 INSERT INTO food_group (group_name) VALUES ('Starters'), ('Main Course'), ('Desserts');
 
